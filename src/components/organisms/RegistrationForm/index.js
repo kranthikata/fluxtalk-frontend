@@ -17,6 +17,7 @@ const RegistrationForm = () => {
     confirmPassword: "",
   });
   const [imageUrl, handleImageUpload] = useImageUpload();
+  const [errors, setErrors] = useState({});
 
   //Handling The Input Changes
   const handleChange = (event) => {
@@ -34,7 +35,7 @@ const RegistrationForm = () => {
     //Checking all fields are provided
     const errors = validateRegistrationForm(formData);
     if (Object.keys(errors).length > 0) {
-      console.log(errors);
+      setErrors(errors);
       return;
     }
     try {
@@ -60,6 +61,7 @@ const RegistrationForm = () => {
           placeholder="Name"
           onChange={handleChange}
           value={formData.name}
+          errorMessage={errors.name}
         />
         <InputField
           type="email"
@@ -67,6 +69,7 @@ const RegistrationForm = () => {
           placeholder="Email"
           onChange={handleChange}
           value={formData.email}
+          errorMessage={errors.email}
         />
         <PasswordInputField
           type="password"
@@ -74,7 +77,7 @@ const RegistrationForm = () => {
           placeholder="Password"
           onChange={handleChange}
           value={formData.password}
-          errorMessage="*Password Required"
+          errorMessage={errors.password}
         />
         <PasswordInputField
           type="password"
@@ -82,7 +85,7 @@ const RegistrationForm = () => {
           placeholder="Confirm Password"
           onChange={handleChange}
           value={formData.confirmPassword}
-          errorMessage="*Password Didn't Matched"
+          errorMessage={errors.confirmPassword}
         />
         <Paragraph className="text-xs ml-3 mb-[-10px]">
           Upload a profile image (optional)

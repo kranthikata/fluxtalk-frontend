@@ -2,7 +2,14 @@ import PropTypes from "prop-types";
 import Input from "../../atoms/Input";
 import Paragraph from "../../atoms/Paragraph";
 
-const InputField = ({ type, name, placeholder, value, onChange }) => {
+const InputField = ({
+  type,
+  name,
+  placeholder,
+  value,
+  onChange,
+  errorMessage,
+}) => {
   return (
     <>
       <Input
@@ -13,7 +20,7 @@ const InputField = ({ type, name, placeholder, value, onChange }) => {
         onChange={onChange}
       />
       <Paragraph className="text-xs text-red-500 mt-[-10px]">
-        NameError
+        {errorMessage}
       </Paragraph>
     </>
   );
