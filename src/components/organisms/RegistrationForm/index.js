@@ -118,7 +118,7 @@ const RegistrationForm = () => {
         />
         <AuthButton
           type="submit"
-          className="flex justify-center items-center bg-gradient-to-r from-cyan-300 to-green-300 rounded-xl text-white py-2  hover:scale-105 duration-300"
+          className="flex justify-center items-center bg-cyan-400 rounded-xl text-white py-2  hover:scale-105 duration-300"
           isLoading={inProgress.loading}
           buttonText={inProgress.progressText}
         />

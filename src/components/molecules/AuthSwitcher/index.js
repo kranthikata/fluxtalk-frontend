@@ -17,7 +17,7 @@ const AuthSwitcher = ({ messageText, buttonText, onClick }) => {
         <Paragraph>{messageText}</Paragraph>
         <Button
           onClick={onClick}
-          className="py-2 px-5 bg-cyan-400 rounded-xl border hover:scale-105 duration-300 shadow-xl"
+          className="py-2 px-5 bg-cyan-400 text-white rounded-xl border hover:scale-105 duration-300 shadow-xl"
         >
           {buttonText}
         </Button>

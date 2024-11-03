@@ -11,7 +11,7 @@ const Header = ({ logo, onSignUp }) => {
 
 Header.propTypes = {
   logo: PropTypes.string.isRequired,
-  onSignUp: PropTypes.func.isRequired,
+  onSignUp: PropTypes.func,
 };
 
 export default Header;
