@@ -4,7 +4,7 @@ import Heading from "../../atoms/Heading";
 const FormTemplate = ({ title, children }) => {
   return (
     <>
-      <Heading level={2} className="font-bold text-2xl mb-8">
+      <Heading level={2} className="font-bold text-2xl mb-8 ml-3">
         {title}
       </Heading>
       {children}

@@ -13,8 +13,8 @@ const AuthSwitcher = ({ messageText, buttonText, onClick }) => {
       </div>
 
       {/* -------------------------------Auth Switcher-------------------------- */}
-      <div className="mt-3 text-xs flex justify-between items-center">
-        <Paragraph>{messageText}</Paragraph>
+      <div className="mt-3 text-xs flex justify-around items-center">
+        <Paragraph className="text-[14px]">{messageText}</Paragraph>
         <Button
           onClick={onClick}
           className="py-2 px-5 bg-cyan-400 text-white rounded-xl border hover:scale-105 duration-300 shadow-xl"

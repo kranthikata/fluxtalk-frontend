@@ -73,7 +73,7 @@ const RegistrationForm = () => {
 
   return (
     <>
-      <form className="flex flex-col gap-4" onSubmit={onSignUp}>
+      <form className="flex flex-col gap-2 md:gap-3" onSubmit={onSignUp}>
         <InputField
           type="text"
           name="name"
@@ -118,7 +118,7 @@ const RegistrationForm = () => {
         />
         <AuthButton
           type="submit"
-          className="flex justify-center items-center bg-cyan-400 rounded-xl text-white py-2  hover:scale-105 duration-300"
+          className="flex justify-center items-center bg-cyan-400 rounded-xl text-white py-2  hover:scale-105 duration-300 shadow-xl"
           isLoading={inProgress.loading}
           buttonText={inProgress.progressText}
         />
