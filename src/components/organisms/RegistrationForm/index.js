@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import InputField from "../../molecules/InputField";
 import Paragraph from "../../atoms/Paragraph";
 import PasswordInputField from "../../molecules/PasswordInputField";
@@ -9,8 +9,10 @@ import AuthSwitcher from "../../molecules/AuthSwitcher";
 import { signUpUser } from "../../../api/authApi";
 import validateRegistrationForm from "../../../utils/validateRegistrationForm";
 import { messages } from "../../../utils/messages";
+import NavigationContext from "../../../context/NavigationContext";
 
 const RegistrationForm = () => {
+  const { navigateTo } = useContext(NavigationContext);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -25,6 +27,10 @@ const RegistrationForm = () => {
     progressText: "Sign Up",
   });
 
+  //Redirecting to login page
+  const hangleLoginRedirect = () => {
+    navigateTo("/login");
+  };
   //Handling The Input Changes
   const handleChange = (event) => {
     const { name, value, files } = event.target;
@@ -128,7 +134,11 @@ const RegistrationForm = () => {
           {errors.signUp}
         </Paragraph>
       )}
-      <AuthSwitcher messageText="Already a member?" buttonText="Login" />
+      <AuthSwitcher
+        messageText="Already a member?"
+        buttonText="Login"
+        onClick={hangleLoginRedirect}
+      />
     </>
   );
 };

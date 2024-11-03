@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Paragraph from "../../atoms/Paragraph";
 import InputField from "../../molecules/InputField";
 import PasswordInputField from "../../molecules/PasswordInputField";
@@ -7,8 +7,10 @@ import AuthSwitcher from "../../molecules/AuthSwitcher";
 import { loginUser } from "../../../api/authApi";
 import validateLoginForm from "../../../utils/validateLoginForm";
 import { messages } from "../../../utils/messages";
+import NavigationContext from "../../../context/NavigationContext";
 
 const LoginForm = () => {
+  const { navigateTo } = useContext(NavigationContext);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -19,6 +21,11 @@ const LoginForm = () => {
     loading: false,
     progressText: "Login",
   });
+
+  //Redirecting to the registration page
+  const handleRegistrationRedirect = () => {
+    navigateTo("/registration");
+  };
 
   //Handling Input Change
   const handleChange = (event) => {
@@ -93,7 +100,11 @@ const LoginForm = () => {
           {errors.login}
         </Paragraph>
       )}
-      <AuthSwitcher messageText="New to FluxTalk?" buttonText="Register" />
+      <AuthSwitcher
+        messageText="New to FluxTalk?"
+        buttonText="Register"
+        onClick={handleRegistrationRedirect}
+      />
     </>
   );
 };
