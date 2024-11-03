@@ -7,7 +7,10 @@ import Image from "../../atoms/Image";
 const LandingPage = (props) => {
   const { history } = props;
   const handleSignUp = () => {
-    history.push("/register");
+    history.push("/registration");
+  };
+  const handleLogin = () => {
+    history.push("/login");
   };
   return (
     <div className="bg-gradient-to-r h-full from-green-200 to-cyan-200">
@@ -38,7 +41,7 @@ const LandingPage = (props) => {
           <Button
             type="button"
             className="bg-customBlue hover:bg-customGreen text-white px-5 py-3 rounded-full shadow-lg md:block hidden drop-shadow-2xl"
-            onClick={handleSignUp}
+            onClick={handleLogin}
           >
             Start Chatting Now
           </Button>
