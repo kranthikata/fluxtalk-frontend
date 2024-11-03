@@ -19,9 +19,11 @@ const InputField = ({
         name={name}
         onChange={onChange}
       />
-      <Paragraph className="text-xs text-red-500 mt-[-10px]">
-        {errorMessage}
-      </Paragraph>
+      {errorMessage && (
+        <Paragraph className="text-xs text-red-500 mt-[-10px]">
+          {errorMessage}
+        </Paragraph>
+      )}
     </>
   );
 };

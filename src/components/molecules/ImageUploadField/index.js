@@ -1,10 +1,35 @@
 import PropTypes from "prop-types";
-import { MdCloudDone } from "react-icons/md";
+import { TailSpin } from "react-loader-spinner";
+import { MdCloudDone, MdError } from "react-icons/md";
 import Input from "../../atoms/Input";
 import Icon from "../../atoms/Icon";
 import Paragraph from "../../atoms/Paragraph";
 
-const ImageUploadField = ({ type, name, accept, onChange, className }) => {
+const ImageUploadField = ({
+  type,
+  name,
+  accept,
+  onChange,
+  className,
+  errorMessage,
+  uploadStatus,
+}) => {
+  const getIcon = () => {
+    switch (uploadStatus) {
+      case "uploading":
+        return (
+          <div className="absolute -right-4 top-3">
+            <Icon icon={TailSpin} height={14} color="black" />
+          </div>
+        );
+      case "success":
+        return <Icon icon={MdCloudDone} />;
+      case "error":
+        return <Icon icon={MdError} />;
+      default:
+        return null;
+    }
+  };
   return (
     <>
       <div className="relative">
@@ -15,11 +40,13 @@ const ImageUploadField = ({ type, name, accept, onChange, className }) => {
           onChange={onChange}
           className={className}
         />
-        <Icon icon={MdCloudDone} />
+        {getIcon()}
       </div>
-      <Paragraph className="text-xs text-red-500 mt-[-10px]">
-        Error Uploading
-      </Paragraph>
+      {errorMessage && (
+        <Paragraph className="text-xs text-red-500 mt-[-10px]">
+          {errorMessage}
+        </Paragraph>
+      )}
     </>
   );
 };
@@ -30,6 +57,8 @@ ImageUploadField.propTypes = {
   accept: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   className: PropTypes.string,
+  errorMessage: PropTypes.string,
+  uploadStatus: PropTypes.string,
 };
 
 export default ImageUploadField;

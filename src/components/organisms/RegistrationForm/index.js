@@ -8,6 +8,7 @@ import useImageUpload from "../../../hooks/useImageUpload";
 import AuthSwitcher from "../../molecules/AuthSwitcher";
 import { signUpUser } from "../../../api/authApi";
 import validateRegistrationForm from "../../../utils/validateRegistrationForm";
+import { messages } from "../../../utils/messages";
 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
@@ -16,8 +17,13 @@ const RegistrationForm = () => {
     password: "",
     confirmPassword: "",
   });
-  const [imageUrl, handleImageUpload] = useImageUpload();
+  const [imageUrl, handleImageUpload, imageError, uploadStatus] =
+    useImageUpload();
   const [errors, setErrors] = useState({});
+  const [inProgress, setInProgress] = useState({
+    loading: false,
+    progressText: "Sign Up",
+  });
 
   //Handling The Input Changes
   const handleChange = (event) => {
@@ -39,7 +45,8 @@ const RegistrationForm = () => {
       return;
     }
     try {
-      console.log("Started");
+      setErrors({});
+      setInProgress({ loading: true, progressText: "Signing Up..." });
       const response = await signUpUser({
         name: formData.name,
         email: formData.email,
@@ -47,8 +54,20 @@ const RegistrationForm = () => {
         image: imageUrl,
       });
       console.log(response);
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
     } catch (error) {
       console.log(error);
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        signUp: error.response.data.message || messages.errors.signUpFailed,
+      }));
+    } finally {
+      setInProgress({ loading: false, progressText: "Sign Up" });
     }
   };
 
@@ -72,7 +91,6 @@ const RegistrationForm = () => {
           errorMessage={errors.email}
         />
         <PasswordInputField
-          type="password"
           name="password"
           placeholder="Password"
           onChange={handleChange}
@@ -80,12 +98,11 @@ const RegistrationForm = () => {
           errorMessage={errors.password}
         />
         <PasswordInputField
-          type="password"
           name="confirmPassword"
           placeholder="Confirm Password"
           onChange={handleChange}
           value={formData.confirmPassword}
-          errorMessage={errors.confirmPassword}
+          errorMessage={errors.passwordMismatched}
         />
         <Paragraph className="text-xs ml-3 mb-[-10px]">
           Upload a profile image (optional)
@@ -96,15 +113,21 @@ const RegistrationForm = () => {
           accept="image/*"
           onChange={handleImageUpload}
           className="cursor-pointer file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          errorMessage={imageError}
+          uploadStatus={uploadStatus}
         />
         <AuthButton
           type="submit"
           className="flex justify-center items-center bg-gradient-to-r from-cyan-300 to-green-300 rounded-xl text-white py-2  hover:scale-105 duration-300"
-        ></AuthButton>
+          isLoading={inProgress.loading}
+          buttonText={inProgress.progressText}
+        />
       </form>
-      <Paragraph className="text-red-500 text-xs text-center font-bold mt-3 animate-shake">
-        SignUpError
-      </Paragraph>
+      {errors.signUp && (
+        <Paragraph className="text-red-500 text-xs text-center font-bold mt-3 animate-shake">
+          {errors.signUp}
+        </Paragraph>
+      )}
       <AuthSwitcher messageText="Already a member?" buttonText="Login" />
     </>
   );

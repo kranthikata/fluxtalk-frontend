@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { messages } from "../../utils/messages";
 
 const useImageUpload = () => {
   const [imageUrl, setImageUrl] = useState();
+  const [imageError, setImageError] = useState("");
+  const [uploadStatus, setUploadStatus] = useState("idle");
 
   //Handling The Image Upload
   const handleImageUpload = (event) => {
@@ -23,6 +26,9 @@ const useImageUpload = () => {
 
       console.log(data);
 
+      //Clearing error if exists
+      setImageError("");
+      setUploadStatus("uploading");
       //Uploading to cloudinary
       fetch("https://api.cloudinary.com/v1_1/duqopzabn/image/upload", {
         method: "POST",
@@ -31,17 +37,20 @@ const useImageUpload = () => {
         .then((response) => response.json())
         .then((data) => {
           setImageUrl(data.url);
+          setUploadStatus("success");
         })
         .catch((error) => {
           console.log("Error uploading image:", error);
+          setImageError(messages.errors.imageUploadError);
+          setUploadStatus("error");
         });
     } else {
-      console.log(
-        "Unsupported file type. Please upload an image in PNG, JPEG, or JPG format."
-      );
+      console.log(messages.errors.unsupportedFileType);
+      setImageError(messages.errors.unsupportedFileType);
+      setUploadStatus("error");
     }
   };
-  return [imageUrl, handleImageUpload];
+  return [imageUrl, handleImageUpload, imageError, uploadStatus];
 };
 
 export default useImageUpload;

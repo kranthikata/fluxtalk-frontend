@@ -4,11 +4,17 @@ import Button from "../../atoms/Button";
 import Icon from "../../atoms/Icon";
 import Paragraph from "../../atoms/Paragraph";
 
-const AuthButton = ({ type, className }) => {
+const AuthButton = ({ type, className, isLoading, buttonText }) => {
   return (
     <Button type={type} className={className}>
-      <Icon icon={TailSpin} height={14} color="black" />
-      <Paragraph className="ml-2">Signing Up...</Paragraph>
+      {isLoading ? (
+        <>
+          <Icon icon={TailSpin} height={14} color="black" />
+          <Paragraph className="ml-1">{buttonText}</Paragraph>
+        </>
+      ) : (
+        <Paragraph>{buttonText}</Paragraph>
+      )}
     </Button>
   );
 };
@@ -16,6 +22,8 @@ const AuthButton = ({ type, className }) => {
 AuthButton.propTypes = {
   type: PropTypes.string.isRequired,
   className: PropTypes.string,
+  isLoading: PropTypes.bool,
+  buttonText: PropTypes.string.isRequired,
 };
 
 export default AuthButton;
