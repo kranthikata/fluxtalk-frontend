@@ -19,11 +19,6 @@ const validateRegistrationForm = (formData) => {
     errors.password = messages.errors.passwordRequired;
   }
 
-  //Checking if the confirm password field is filled
-  if (!validateRequired(formData.confirmPassword)) {
-    errors.confirmPassword = messages.errors.confirmPasswordRequired;
-  }
-
   //Checking if the password field value and confirm password value is same
   if (!validatePasswordMatch(formData.password, formData.confirmPassword)) {
     errors.passwordMismatched = messages.errors.passwordMismatch;
