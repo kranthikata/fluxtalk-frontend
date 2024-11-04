@@ -15,17 +15,23 @@ const ImageUploadField = ({
   uploadStatus,
 }) => {
   const getIcon = () => {
+    const iconClassName = "absolute top-1/2 right-3 -translate-y-1/2";
     switch (uploadStatus) {
       case "uploading":
         return (
           <div className="absolute -right-4 top-3">
-            <Icon icon={TailSpin} height={14} color="black" />
+            <Icon
+              icon={TailSpin}
+              height={14}
+              color="black"
+              className={iconClassName}
+            />
           </div>
         );
       case "success":
-        return <Icon icon={MdCloudDone} />;
+        return <Icon icon={MdCloudDone} className={iconClassName} />;
       case "error":
-        return <Icon icon={MdError} />;
+        return <Icon icon={MdError} className={iconClassName} />;
       default:
         return null;
     }

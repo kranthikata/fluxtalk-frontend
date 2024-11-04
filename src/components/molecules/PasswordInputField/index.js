@@ -29,7 +29,10 @@ const PasswordInputField = ({
           onChange={onChange}
         />
         <Button type="button" onClick={togglePassword}>
-          <Icon icon={showPassword ? FaEye : RiEyeCloseFill} />
+          <Icon
+            icon={showPassword ? FaEye : RiEyeCloseFill}
+            className="absolute top-1/2 right-3 -translate-y-1/2"
+          />
         </Button>
       </div>
       {errorMessage && (
