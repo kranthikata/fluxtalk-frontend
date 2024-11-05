@@ -118,7 +118,7 @@ const RegistrationForm = () => {
           name="image"
           accept="image/*"
           onChange={handleImageUpload}
-          className="cursor-pointer file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          className="p-2 rounded-xl w-full border outline-none cursor-pointer file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
           errorMessage={imageError}
           uploadStatus={uploadStatus}
         />

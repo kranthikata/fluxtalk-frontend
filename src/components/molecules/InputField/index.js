@@ -18,6 +18,7 @@ const InputField = ({
         value={value}
         name={name}
         onChange={onChange}
+        className="p-2 rounded-xl w-full border outline-none"
       />
       {errorMessage && (
         <Paragraph className="text-xs text-red-500 mt-[-10px]">

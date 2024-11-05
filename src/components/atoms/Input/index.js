@@ -17,7 +17,7 @@ const Input = ({
       name={name}
       value={value}
       onChange={onChange}
-      className={`p-2 rounded-xl w-full border outline-none ${className}`}
+      className={className}
       {...otherProps}
     />
   );
