@@ -1,7 +1,7 @@
 import axios from "axios";
 
+const { accessToken } = JSON.parse(localStorage.getItem("userInfo"));
 export const createChat = (userId) => {
-  const { accessToken } = JSON.parse(localStorage.getItem("userInfo"));
   return axios.post(
     "https://fluxtalk-backend.onrender.com/api/v1/chats/",
     {
@@ -13,5 +13,12 @@ export const createChat = (userId) => {
         Authorization: `Bearer ${accessToken}`,
       },
     }
+  );
+};
+
+export const deleteChat = (chatId) => {
+  return axios.delete(
+    `https://fluxtalk-backend.onrender.com/api/v1/chats/${chatId}`,
+    { headers: { Authorization: `Bearer ${accessToken}` } }
   );
 };

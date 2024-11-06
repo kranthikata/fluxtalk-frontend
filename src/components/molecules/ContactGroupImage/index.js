@@ -6,7 +6,6 @@ const ContactGroupImage = ({ userDetails }) => {
   const userImage1 = userDetails?.users[0]?.image;
   const userName2 = userDetails?.users[0]?.name;
   const userImage2 = userDetails?.users[0]?.image;
-  console.log(userName1, userName2, userImage2, userImage1);
   return (
     <div className="h-14 w-16 flex items-center relative md:pr-5">
       <Image
