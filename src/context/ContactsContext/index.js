@@ -1,7 +1,8 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { getContacts } from "../../api/contactsAPI";
 import { deleteChat } from "../../api/chatAPI";
+import MessagesContext from "../MessagesContext";
 
 const ContactsContext = createContext();
 
@@ -9,6 +10,7 @@ export const ContactsProvider = ({ children }) => {
   const [contacts, setContacts] = useState([]);
   const [activeItem, setActiveItem] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { setChatId, setMessages } = useContext(MessagesContext);
 
   const fetchContacts = async () => {
     setIsLoading(true);
@@ -27,7 +29,9 @@ export const ContactsProvider = ({ children }) => {
   };
 
   const updateActiveItem = (item) => {
+    setMessages([]);
     setActiveItem(item);
+    setChatId(item._id);
   };
 
   const deselectActiveItem = () => {
@@ -53,6 +57,7 @@ export const ContactsProvider = ({ children }) => {
         contacts,
         isLoading,
         activeItem,
+        setActiveItem,
         updateActiveItem,
         deselectActiveItem,
         handleDeleteChat,

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import ContactsContext from "../../../context/ContactsContext";
-import ChatBody from "../Messages";
+import ChatBody from "../ChatBody";
 import ChatHeader from "../ChatHeader";
 
 const ChatSelectedView = () => {

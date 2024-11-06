@@ -58,3 +58,15 @@ export const isLastMessage = (messages, index, userId) => {
     messages[messages.length - 1].sender._id
   );
 };
+
+export const getUserName = (loggedUser, activeItem, user) => {
+  if (user._id === activeItem.groupAdmin._id && user._id === loggedUser._id) {
+    return user.name + " (You) (Admin)";
+  } else if (loggedUser._id === user._id) {
+    return user.name + " (You)";
+  } else if (user._id === activeItem.groupAdmin._id) {
+    return user.name + " (Admin)";
+  } else {
+    return user.name;
+  }
+};

@@ -5,6 +5,7 @@ import { isSameSender, isLastMessage } from "../../../utils/chatUtils";
 const Messages = ({ messages }) => {
   const { user } = JSON.parse(localStorage.getItem("userInfo"));
   const ulRef = useRef();
+
   return (
     <ul
       ref={ulRef}

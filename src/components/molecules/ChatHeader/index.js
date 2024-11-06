@@ -14,6 +14,7 @@ const ChatHeader = () => {
     useContext(ContactsContext);
   const { user } = JSON.parse(localStorage.getItem("userInfo"));
   const [chatName, chatImage] = getChatDetails(user._id, activeItem);
+
   return (
     <div className="flex justify-between border-b pb-2 items-center">
       <div className="flex justify-between w-full">
@@ -33,7 +34,7 @@ const ChatHeader = () => {
         {!activeItem.isGroupChat && (
           <Button
             type="button"
-            onClick={handleDeleteChat}
+            onClick={() => handleDeleteChat(activeItem._id)}
             className="border border-red-500 px-3 py-1 rounded-xl hover:bg-red-500 hover:text-white"
           >
             Delete

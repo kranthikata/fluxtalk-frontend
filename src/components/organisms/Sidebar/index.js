@@ -8,6 +8,9 @@ import SidebarUserProfile from "../../molecules/SidebarUserProfile";
 import { searchUsers } from "../../../api/userSearchAPI";
 import SearchResultItem from "../../molecules/SearchResultItem";
 import { createChat } from "../../../api/chatAPI";
+import ContactsContext from "../../../context/ContactsContext";
+import Icon from "../../atoms/Icon";
+import { TailSpin } from "react-loader-spinner";
 
 const navItems = [
   {
@@ -18,8 +21,16 @@ const navItems = [
   },
 ];
 const Sidebar = () => {
-  const { expanded, navigateTo, isMenuOpened, toggleMenu, toggleSidebar } =
-    useContext(SidebarContext); //Utilizing the sidebarContext
+  const { setActiveItem, handleContactUpdate } = useContext(ContactsContext);
+  const {
+    expanded,
+    navigateTo,
+    isLoading,
+    isMenuOpened,
+    setLoading,
+    toggleMenu,
+    toggleSidebar,
+  } = useContext(SidebarContext); //Utilizing the sidebarContext
   const { user } = JSON.parse(localStorage.getItem("userInfo")) || {};
   const [searchInputValue, setSearchInputValue] = useState("");
   const [searchResults, setSearchResults] = useState({
@@ -94,8 +105,19 @@ const Sidebar = () => {
 
   //Create a chat with the selected user from search results
   const createChatWithUser = async (userId) => {
-    const { data } = await createChat(userId);
-    console.log(data);
+    try {
+      setLoading(true);
+      const { data } = await createChat(userId);
+      await handleContactUpdate();
+      setActiveItem(data.chat);
+      toggleSidebar();
+      setSearchInputValue("");
+      setSearchResults((prevState) => ({ ...prevState, usersList: [] }));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   //Handling the logout
@@ -118,7 +140,7 @@ const Sidebar = () => {
         />
         {searchResults.usersList.length > 0 && (
           <ul
-            className={`w-[85%] pl-0 max-h-32 border overflow-auto custom-scrollbar flex flex-col m-auto rounded-md ${
+            className={`w-[85%] pl-0 max-h-32 overflow-auto custom-scrollbar flex flex-col m-auto rounded-md ${
               !expanded && "hidden"
             } z-10`}
           >
@@ -141,6 +163,17 @@ const Sidebar = () => {
           isMenuOpened={isMenuOpened}
         />
       </nav>
+      {isLoading && (
+        <div className="z-10 fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center h-full w-full">
+          <Icon
+            icon={TailSpin}
+            height={30}
+            width={30}
+            color="black"
+            className="absolute top-1/2 right-0 -translate-y-1/2"
+          />
+        </div>
+      )}
     </aside>
   );
 };

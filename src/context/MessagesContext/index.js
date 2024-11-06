@@ -23,7 +23,7 @@ export const MessagesProvider = ({ children }) => {
       //Fetch initial messages
       const fetchMessages = async () => {
         try {
-          const { data } = getMessages(chatId);
+          const { data } = await getMessages(chatId);
           setMessages(data);
         } catch (error) {
           console.log(error);
@@ -42,8 +42,8 @@ export const MessagesProvider = ({ children }) => {
   const handleSendMessage = async (newMessage, activeItem) => {
     if (newMessage) {
       try {
-        const { data } = await sendMessage(newMessage, activeItem._id);
-        socket.emit("chat message", { ...data, room: activeItem._id });
+        const { data } = await sendMessage(newMessage, activeItem);
+        socket.emit("chat message", { ...data, room: activeItem });
       } catch (error) {
         console.log(error);
       }
@@ -52,7 +52,7 @@ export const MessagesProvider = ({ children }) => {
 
   return (
     <MessagesContext.Provider
-      value={{ messages, setChatId, handleSendMessage }}
+      value={{ messages, setChatId, handleSendMessage, setMessages }}
     >
       {children}
     </MessagesContext.Provider>

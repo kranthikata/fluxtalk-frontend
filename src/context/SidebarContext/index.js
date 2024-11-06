@@ -6,6 +6,7 @@ const SidebarContext = createContext();
 export const SidebarProvider = ({ children }) => {
   const [expanded, setExpanded] = useState(false);
   const [isMenuOpened, setIsMenuOpened] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const history = useHistory();
 
   //Navigating
@@ -29,6 +30,8 @@ export const SidebarProvider = ({ children }) => {
       value={{
         expanded,
         isMenuOpened,
+        isLoading,
+        setLoading,
         toggleMenu,
         toggleSidebar,
         navigateTo,

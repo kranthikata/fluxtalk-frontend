@@ -17,6 +17,7 @@ const MessageInputField = ({ activeItem }) => {
     <div className="rounded-full flex items-center justify-around mb-2">
       <Input
         type="text"
+        name="message"
         onChange={(event) => setNewMessage(event.target.value)}
         onKeyDown={onClickEnter}
         value={newMessage}
@@ -26,7 +27,7 @@ const MessageInputField = ({ activeItem }) => {
 
       <Button
         onClick={() => handleSendMessage(newMessage, activeItem._id)}
-        className="rounded-full h-full flex items-center justify-center px-2 bg-gradient-to-bl from-custom-green to-custom-blue"
+        className="rounded-full h-full flex items-center justify-center px-2 bg-gradient-to-bl from-customGreen to-customBlue"
       >
         <Icon icon={BiSolidSend} className="text-white" size="22" />
       </Button>

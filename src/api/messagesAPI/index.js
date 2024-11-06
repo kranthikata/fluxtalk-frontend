@@ -13,7 +13,10 @@ export const sendMessage = (message, chatId) => {
     `https://fluxtalk-backend.onrender.com/api/v1/messages`,
     { content: message, chatId },
     {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
     }
   );
 };
