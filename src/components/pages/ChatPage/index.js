@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import Sidebar from "../../organisms/Sidebar";
 import ContactsSection from "../../organisms/ContactsSection";
 import ChatSection from "../../organisms/ChatSection";
@@ -16,7 +16,7 @@ const ChatPage = () => {
           <ModelProvider>
             <div className="flex">
               <Sidebar />
-              <ContactsSection toggleModel={true} />
+              <ContactsSection />
               <ChatSection />
               <ProfileSection />
             </div>

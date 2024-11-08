@@ -64,7 +64,7 @@ export const removeUserFromGroup = (chatId, userId) => {
 
 export const renameGroup = (chatId, chatName) => {
   return axios.put(
-    "http://localhost:5000/api/v1/chats/rename",
+    "https://fluxtalk-backend.onrender.com/api/v1/chats/rename",
     { chatId, chatName },
     {
       headers: {

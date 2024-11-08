@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { getContacts } from "../../api/contactsAPI";
 import { deleteChat } from "../../api/chatAPI";
 import MessagesContext from "../MessagesContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ContactsContext = createContext();
 
@@ -11,6 +13,7 @@ export const ContactsProvider = ({ children }) => {
   const [activeItem, setActiveItem] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { setChatId, setMessages } = useContext(MessagesContext);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   const fetchContacts = async () => {
     setIsLoading(true);
@@ -40,10 +43,21 @@ export const ContactsProvider = ({ children }) => {
 
   const handleDeleteChat = async (chatId) => {
     try {
+      setIsDeleteLoading(true);
       await deleteChat(chatId);
       setActiveItem(null);
+      await handleContactUpdate();
+      setTimeout(() => {
+        toast.success("Deleted Successfully", {
+          position: "bottom-center",
+        });
+      }, 200);
     } catch (error) {
-      console.log(error);
+      toast.error(error.message, {
+        position: "bottom-center",
+      });
+    } finally {
+      setIsDeleteLoading(false);
     }
   };
 
@@ -57,6 +71,7 @@ export const ContactsProvider = ({ children }) => {
         contacts,
         isLoading,
         activeItem,
+        isDeleteLoading,
         setActiveItem,
         updateActiveItem,
         deselectActiveItem,

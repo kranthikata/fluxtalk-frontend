@@ -17,7 +17,6 @@ const ProfileSection = () => {
       userEmail = activeItem.users[0].email;
     }
   }
-
   return (
     <div
       className={`border-l hidden p-4 fixed right-0 w-60 h-full ${

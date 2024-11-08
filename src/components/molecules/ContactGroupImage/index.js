@@ -14,12 +14,12 @@ const ContactGroupImage = ({ userDetails }) => {
         alt={userName1}
       />
       <Image
-        className="rounded-full h-10 w-10 absolute"
+        className="rounded-full h-10 w-10 absolute ml-2"
         src={userImage2}
         alt={userName2}
       />
       {userDetails.users.length - 2 !== 0 && (
-        <div className="rounded-full h-10 w-10 absolute bg-gradient-to-tr from-custom-blue to-custom-green flex items-center justify-center text-white text-sm ml-4">
+        <div className="rounded-full h-10 w-10 absolute bg-gradient-to-tr from-customBlue to-customGreen flex items-center justify-center text-white text-sm ml-4">
           +{userDetails.users.length - 2}
         </div>
       )}

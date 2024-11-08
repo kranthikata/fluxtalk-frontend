@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Input from "../../atoms/Input";
-import SearchBar from "../SearchBar";
 import Image from "../../atoms/Image";
 import Paragraph from "../../atoms/Paragraph";
 import Button from "../../atoms/Button";
@@ -10,30 +9,66 @@ import ContactsContext from "../../../context/ContactsContext";
 import ModelContext from "../../../context/ModelContext";
 import { addUserToGroup, renameGroup } from "../../../api/chatAPI";
 import { searchUsers } from "../../../api/userSearchAPI";
+import { TailSpin } from "react-loader-spinner";
 
 const EditGroupChatModelForm = () => {
-  const { activeItem } = useContext(ContactsContext);
-  const { setCurrentUsers, error, setError, setShowModel, handleRemoveUser } =
-    useContext(ModelContext);
+  const { activeItem, handleContactUpdate, setActiveItem } =
+    useContext(ContactsContext);
+  const {
+    error,
+    setError,
+    setShowUpdateModel,
+    handleRemove,
+    setIsUpdateLoading,
+  } = useContext(ModelContext);
+
   const [formData, setFormData] = useState({
     groupName: "",
     userName: "",
   });
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState({
+    results: [],
+    status: "",
+  });
   const [userTags, setUserTags] = useState([]);
 
+  //Perform search
+  const searchUser = (userName) => {
+    if (userName === "") return;
+    setTimeout(async () => {
+      try {
+        const { data } = await searchUsers(userName);
+        setSearchResults((prevState) => ({ ...prevState, results: data }));
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setSearchResults((prevState) => ({ ...prevState, status: "DONE" }));
+      }
+    });
+  };
+
+  useEffect(() => {
+    let delayDebounce;
+    if (formData.userName === "") {
+      clearTimeout(delayDebounce);
+      setSearchResults({ status: "", results: [] });
+      return;
+    }
+
+    setSearchResults((prevState) => ({ ...prevState, status: "LOADING" }));
+    delayDebounce = setTimeout(() => {
+      searchUser(formData.userName);
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [formData.userName]);
+
   //Handle change username
-  const handleChangeUserName = async (event) => {
+  const handleChangeUserName = (event) => {
     setFormData((prevState) => ({
       ...prevState,
       userName: event.target.value,
     }));
-    try {
-      const { data } = await searchUsers(formData.userName);
-      setSearchResults(data);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   //Handle add new user
@@ -53,12 +88,18 @@ const EditGroupChatModelForm = () => {
       setError("Only admin can add new members");
       return;
     }
+
     try {
+      setError("");
+      setIsUpdateLoading(true);
       const { data } = await addUserToGroup(activeItem._id, selectedUser._id);
-      setCurrentUsers((prevState) => [...prevState, data]);
-      setShowModel(false);
+      setActiveItem(data.addedMember);
+      setShowUpdateModel(false);
+      await handleContactUpdate();
     } catch (error) {
-      console.log(error);
+      setError(error?.response?.data?.message || error.message);
+    } finally {
+      setIsUpdateLoading(false);
     }
   };
 
@@ -72,16 +113,24 @@ const EditGroupChatModelForm = () => {
   const handleRename = async () => {
     //Check group name is empty
     if (!formData.groupName) {
+      setError("Enter Group name to update");
       return;
     }
 
     //Perfom rename
     try {
-      await renameGroup(activeItem._id, formData.groupName);
-      setShowModel(false);
+      setError("");
+      setIsUpdateLoading(true);
+      const { data } = await renameGroup(activeItem._id, formData.groupName);
+      setShowUpdateModel(false);
+      setActiveItem(data.updatedChatName);
+      await handleContactUpdate();
     } catch (error) {
-      console.log(error);
+      setError(error?.response?.data?.message || error.message);
+    } finally {
+      setIsUpdateLoading(false);
     }
+
     setFormData((prevState) => ({ ...prevState, groupName: "" }));
   };
 
@@ -89,6 +138,7 @@ const EditGroupChatModelForm = () => {
     <form>
       <Input
         type="text"
+        name="remane group"
         placeholder="Rename Group"
         value={formData.groupName}
         onChange={(event) =>
@@ -99,20 +149,41 @@ const EditGroupChatModelForm = () => {
         }
         className="w-full px-4 py-3 text-black border-gray-300 rounded-md mb-2"
       />
-      <SearchBar
+      <Input
+        type="search"
+        name="search"
+        placeholder="Add User"
         value={formData.userName}
         onChange={handleChangeUserName}
-        className="w-full px-4 py-3 text-black border-gray-300 rounded-md"
+        className="w-full px-4 py-3 text-black border-gray-300 rounded-md outline-none"
       />
-      {searchResults.length > 0 && (
+      {searchResults.status === "LOADING" && (
+        <div className="w-full h-28 flex items-center justify-center m-auto rounded-md z-10 mt-2">
+          <Icon icon={TailSpin} height={20} color="white" />
+        </div>
+      )}
+      {searchResults.results.length === 0 &&
+        searchResults.status === "DONE" && (
+          <div className="w-full h-28 flex flex-col items-center justify-center m-auto rounded-md z-10 mt-2 bg-white">
+            <Image
+              src="https://res.cloudinary.com/duqopzabn/image/upload/v1731051318/ChatApplication/rb_13616_fl6ezb.png"
+              alt="Not Found"
+              className="h-20"
+            />
+            <p className="text-black">User Not Found</p>
+          </div>
+        )}
+      {searchResults.results.length !== 0 && (
         <ul
-          className={`w-full h-28 overflow-y-auto pl-0 flex flex-col m-auto rounded-md z-10 mt-2 custom-scrollbar`}
+          className={`w-full h-28 overflow-y-auto pl-0 flex flex-col m-auto rounded-md z-10 mt-2 custom-scrollbar ${
+            searchResults.status === "LOADING" && "hidden"
+          }`}
         >
-          {searchResults.map((eachUser) => (
+          {searchResults.results.map((eachUser) => (
             <li
               key={eachUser._id}
               onClick={() => handleAddUser(eachUser)}
-              className="px-2 rounded-md py-1 flex items-center mb-1 cursor-pointer hover:bg-gradient-to-r from-custom-blue-1 to-custom-green-1"
+              className="px-2 rounded-md py-1 flex items-center mb-1 cursor-pointer hover:bg-gradient-to-r from-customGreen to-customBlue"
             >
               <Image
                 src={eachUser.image}
@@ -140,20 +211,20 @@ const EditGroupChatModelForm = () => {
 
       <div className="flex justify-between">
         <button
-          type="submit"
+          type="button"
           onClick={() => {
             const { user } = JSON.parse(localStorage.getItem("userInfo"));
-            handleRemoveUser(user);
+            handleRemove(user);
           }}
-          className="mt-4 w-[49%] flex items-center justify-center gap-2 px-5 py-3 font-medium rounded-md bg-gradient-to-t from-red-500 to-red-400 hover:bg-gradient-to-b"
+          className="mt-4 w-[49%] flex items-center justify-center gap-2 px-5 py-3 font-medium rounded-md bg-gradient-to-t from-red-500 to-red-400 hover:bg-gradient-to-b shadow-xl hover:scale-105 duration-300"
         >
           Leave Group
         </button>
 
         <button
-          type="submit"
+          type="button"
           onClick={handleRename}
-          className="mt-4 w-[49%] flex items-center justify-center gap-2 px-5 py-3 font-medium rounded-md bg-gradient-to-t from-custom-green to-custom-green-1 hover:bg-gradient-to-b"
+          className="mt-4 w-[49%] flex items-center justify-center gap-2 px-5 py-3 font-medium rounded-md bg-gradient-to-t from-customGreen to-green-400 hover:bg-gradient-to-b hover:scale-105 duration-300 shadow-xl"
         >
           Update
         </button>
