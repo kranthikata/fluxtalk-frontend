@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { BiSolidSend } from "react-icons/bi";
 import Input from "../../atoms/Input";
 import Button from "../../atoms/Button";
@@ -6,8 +6,8 @@ import Icon from "../../atoms/Icon";
 import MessagesContext from "../../../context/MessagesContext";
 
 const MessageInputField = ({ activeItem }) => {
-  const [newMessage, setNewMessage] = useState("");
-  const { handleSendMessage } = useContext(MessagesContext);
+  const { handleSendMessage, newMessage, setNewMessage } =
+    useContext(MessagesContext);
   const onClickEnter = (event) => {
     if (event.key === "Enter" && newMessage !== "") {
       handleSendMessage(newMessage, activeItem._id);

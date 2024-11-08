@@ -2,9 +2,9 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import LandingPage from "./components/pages/LandingPage";
 import RegistrationPage from "./components/pages/RegistrationPage";
 import LoginPage from "./components/pages/LoginPage";
-import { ContactsProvider } from "./context/ContactsContext";
 import ChatPage from "./components/pages/ChatPage";
-import Sidebar from "./components/organisms/Sidebar";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -15,6 +15,7 @@ function App() {
         <Route exact path="/login" component={LoginPage} />
         <Route exact path="/chat" component={ChatPage} />
       </Switch>
+      <ToastContainer />
     </BrowserRouter>
   );
 }

@@ -6,7 +6,6 @@ import ModelContext from "../../../context/ModelContext";
 import Icon from "../../atoms/Icon";
 import { TailSpin } from "react-loader-spinner";
 import AddGroupChatModel from "../../organisms/AddGroupChatModel";
-import { ToastContainer } from "react-toastify";
 
 const ContactsSection = () => {
   const { contacts, isLoading, activeItem, updateActiveItem } =
@@ -35,7 +34,6 @@ const ContactsSection = () => {
         )}
       </div>
       {showCreateModel && <AddGroupChatModel />}
-      <ToastContainer />
     </>
   );
 };
