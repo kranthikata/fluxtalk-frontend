@@ -7,7 +7,7 @@ const ContactGroupImage = ({ userDetails }) => {
   const userName2 = userDetails?.users[0]?.name;
   const userImage2 = userDetails?.users[0]?.image;
   return (
-    <div className="h-14 w-16 flex items-center relative md:pr-5">
+    <div className="h-12 w-16 flex items-center relative md:pr-5">
       <Image
         className="rounded-full h-10 w-10 absolute"
         src={userImage1}

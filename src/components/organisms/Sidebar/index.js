@@ -2,7 +2,6 @@ import React, { useContext, useState, useRef, useEffect } from "react";
 import { HiOutlineChatBubbleBottomCenterText } from "react-icons/hi2";
 import SidebarContext from "../../../context/SidebarContext";
 import SidebarHeader from "../../molecules/SidebarHeader";
-import SearchBar from "../../molecules/SearchBar";
 import SidebarNavigation from "../../molecules/SidebarNavigation";
 import SidebarUserProfile from "../../molecules/SidebarUserProfile";
 import { searchUsers } from "../../../api/userSearchAPI";
@@ -10,7 +9,11 @@ import SearchResultItem from "../../molecules/SearchResultItem";
 import { createChat } from "../../../api/chatAPI";
 import ContactsContext from "../../../context/ContactsContext";
 import Icon from "../../atoms/Icon";
+import Input from "../../atoms/Input";
+import { IoSearchSharp } from "react-icons/io5";
 import { TailSpin } from "react-loader-spinner";
+import Button from "../../atoms/Button";
+import Image from "../../atoms/Image";
 
 const navItems = [
   {
@@ -34,8 +37,8 @@ const Sidebar = () => {
   const { user } = JSON.parse(localStorage.getItem("userInfo")) || {};
   const [searchInputValue, setSearchInputValue] = useState("");
   const [searchResults, setSearchResults] = useState({
-    usersList: [],
-    isloading: false,
+    results: [],
+    status: "",
   });
 
   useEffect(() => {
@@ -59,48 +62,41 @@ const Sidebar = () => {
     };
   }, [expanded, toggleSidebar]);
 
+  useEffect(() => {
+    let delayDebounce;
+    if (searchInputValue === "") {
+      clearTimeout(delayDebounce);
+      setSearchResults({ status: "", results: [] });
+      return;
+    }
+
+    setSearchResults((prevState) => ({ ...prevState, status: "LOADING" }));
+    delayDebounce = setTimeout(() => {
+      searchUser(searchInputValue);
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchInputValue]);
+
   //Creating the reference to the Sidebar
   const sidebarRef = useRef();
 
   //Function to perform the search
-  const performUserSearch = async (username) => {
-    //Checking search input is empty
-    if (username === "") {
-      setSearchResults({
-        usersList: [],
-        isloading: false,
-      });
-      return;
-    }
-
-    //Setting loading view
-    setSearchResults({
-      ...searchResults,
-      isloading: true,
-    });
-
-    //searching for users
+  const searchUser = async (username) => {
+    if (username === "") return;
     try {
-      const response = await searchUsers(username);
-      setSearchResults((prevState) => ({
-        ...prevState,
-        usersList: response.data,
-        isloading: false,
-      })); //setting the results to display
+      const { data } = await searchUsers(username);
+      setSearchResults((prevState) => ({ ...prevState, results: data }));
     } catch (error) {
       console.log(error);
     } finally {
-      setSearchResults((prevState) => ({
-        ...prevState,
-        isloading: false,
-      }));
+      setSearchResults((prevState) => ({ ...prevState, status: "DONE" }));
     }
   };
 
   //Handling the user search input
   const handleSearchInput = (event) => {
     setSearchInputValue(event.target.value);
-    performUserSearch(event.target.value);
   };
 
   //Create a chat with the selected user from search results
@@ -126,6 +122,13 @@ const Sidebar = () => {
     navigateTo("/");
   };
 
+  //Opening the search bar
+  const openSearchBar = () => {
+    if (!expanded) {
+      toggleSidebar();
+    }
+  };
+
   return (
     <aside
       ref={sidebarRef}
@@ -133,18 +136,59 @@ const Sidebar = () => {
     >
       <nav className="h-full flex flex-col bg-white border-r shadow-sm">
         <SidebarHeader />
-        <SearchBar
-          value={searchInputValue}
-          onChange={handleSearchInput}
-          loading={searchResults.isloading}
-        />
-        {searchResults.usersList.length > 0 && (
+
+        <div
+          className={`${
+            expanded
+              ? "w-[85%]"
+              : "w-9 justify-center bg-gray-50 hover:bg-gray-100"
+          } flex relative border items-center m-auto h-9 rounded-md my-2`}
+        >
+          <Input
+            type="search"
+            name="search"
+            placeholder="Search User.."
+            className={`w-[90%] h-full p-2 rounded-md outline-none text-md text-gray-600 ${
+              !expanded && "hidden"
+            }`}
+            onChange={handleSearchInput}
+            value={searchInputValue}
+          />
+          <Button type="button" onClick={openSearchBar}>
+            <Icon icon={IoSearchSharp} color="#99a2b0" />
+          </Button>
+        </div>
+        {searchResults.status === "LOADING" && (
+          <div
+            className={`w-full h-28 flex items-center justify-center m-auto rounded-md z-10 mt-2 ${
+              !expanded && "hidden"
+            }`}
+          >
+            <Icon icon={TailSpin} height={20} color="black" />
+          </div>
+        )}
+        {searchResults.results.length === 0 &&
+          searchResults.status === "DONE" && (
+            <div
+              className={`w-full h-28 flex flex-col items-center justify-center m-auto rounded-md z-10 mt-2 bg-white ${
+                !expanded && "hidden"
+              }`}
+            >
+              <Image
+                src="https://res.cloudinary.com/duqopzabn/image/upload/v1731051318/ChatApplication/rb_13616_fl6ezb.png"
+                alt="Not Found"
+                className="h-20"
+              />
+              <p className="text-black">User Not Found</p>
+            </div>
+          )}
+        {searchResults.results.length !== 0 && (
           <ul
             className={`w-[85%] pl-0 max-h-32 overflow-auto custom-scrollbar flex flex-col m-auto rounded-md ${
               !expanded && "hidden"
-            } z-10`}
+            } ${searchResults.status === "LOADING" && "hidden"} z-10`}
           >
-            {searchResults.usersList.map((eachUser) => (
+            {searchResults.results.map((eachUser) => (
               <SearchResultItem
                 key={eachUser._id}
                 id={eachUser._id}

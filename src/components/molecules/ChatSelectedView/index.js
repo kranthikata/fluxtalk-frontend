@@ -7,7 +7,7 @@ const ChatSelectedView = () => {
   const { activeItem } = useContext(ContactsContext);
   return (
     <div
-      className={`p-4 md:left-80 h-full md:w-[calc(100vw_-_20rem)] lg:w-[calc(100vw_-_35rem)] fixed ${
+      className={`px-4 md:left-80 h-full md:w-[calc(100vw_-_20rem)] lg:w-[calc(100vw_-_35rem)] fixed ${
         activeItem && "w-[calc(100vw-4rem)] left-16"
       }`}
     >

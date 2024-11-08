@@ -59,23 +59,21 @@ const AddGroupChatModelForm = () => {
   };
 
   //Perform search
-  const searchUser = (userName) => {
+  const searchUser = async (userName) => {
     if (userName === "") return;
-    setTimeout(async () => {
-      try {
-        setError("");
-        const { data } = await searchUsers(userName);
-        setSearchResults((prevState) => ({ ...prevState, results: data }));
-      } catch (error) {
-        setError(
-          error.response.data.message ||
-            error.message ||
-            "An unknown error occurred"
-        );
-      } finally {
-        setSearchResults((prevState) => ({ ...prevState, status: "DONE" }));
-      }
-    });
+    try {
+      setError("");
+      const { data } = await searchUsers(userName);
+      setSearchResults((prevState) => ({ ...prevState, results: data }));
+    } catch (error) {
+      setError(
+        error.response.data.message ||
+          error.message ||
+          "An unknown error occurred"
+      );
+    } finally {
+      setSearchResults((prevState) => ({ ...prevState, status: "DONE" }));
+    }
   };
 
   useEffect(() => {

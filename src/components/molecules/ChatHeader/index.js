@@ -20,7 +20,7 @@ const ChatHeader = () => {
 
   return (
     <>
-      <div className="flex justify-between border-b pb-2 items-center">
+      <div className="flex justify-between border-b py-2 items-center">
         <div className="flex justify-between w-full">
           <div className="flex items-center">
             <Button onClick={deselectActiveItem} className="mr-5">
@@ -39,7 +39,7 @@ const ChatHeader = () => {
             <Button
               type="button"
               onClick={() => handleDeleteChat(activeItem._id)}
-              className="border border-red-500 px-3 py-1 rounded-xl hover:bg-red-500 hover:text-white"
+              className="border border-red-500 px-3 rounded-xl hover:bg-red-500 hover:text-white"
             >
               Delete
             </Button>
