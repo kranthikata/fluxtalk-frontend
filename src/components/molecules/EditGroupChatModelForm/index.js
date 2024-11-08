@@ -33,18 +33,16 @@ const EditGroupChatModelForm = () => {
   const [userTags, setUserTags] = useState([]);
 
   //Perform search
-  const searchUser = (userName) => {
+  const searchUser = async (userName) => {
     if (userName === "") return;
-    setTimeout(async () => {
-      try {
-        const { data } = await searchUsers(userName);
-        setSearchResults((prevState) => ({ ...prevState, results: data }));
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setSearchResults((prevState) => ({ ...prevState, status: "DONE" }));
-      }
-    });
+    try {
+      const { data } = await searchUsers(userName);
+      setSearchResults((prevState) => ({ ...prevState, results: data }));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setSearchResults((prevState) => ({ ...prevState, status: "DONE" }));
+    }
   };
 
   useEffect(() => {
