@@ -63,11 +63,11 @@ const LoginForm = () => {
       toast.success("Login Success!");
       navigateReplace("/chat");
     } catch (error) {
-      console.log(error);
       setErrors((prevErrors) => ({
         ...prevErrors,
         login: error.response.data.message || messages.errors.loginFailed,
       }));
+      toast.error("Login Failed!");
     } finally {
       setInProgress({ loading: false, progressText: "Login" });
     }

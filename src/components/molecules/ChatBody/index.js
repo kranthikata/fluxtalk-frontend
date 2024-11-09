@@ -11,7 +11,7 @@ const ChatBody = () => {
   const { activeChatMessages, messagesLoadingStatus } =
     useContext(MessagesContext);
   return (
-    <div className="flex flex-col h-[91vh] justify-between">
+    <div className="relative flex flex-col h-[91vh] justify-between">
       {messagesLoadingStatus === "LOADING" ? (
         <div className="w-full h-full flex justify-center items-center">
           <Icon icon={TailSpin} width={35} height={35} />

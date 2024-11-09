@@ -49,12 +49,12 @@ const Messages = ({ messages }) => {
           <Image
             src="https://res.cloudinary.com/duqopzabn/image/upload/v1731075181/ChatApplication/rb_2744_hy2kpk.png"
             alt="No Chat Here"
-            className="mb-2 h-72"
+            className="mb-2 md:h-72"
           />
           <Heading level={1} className="text-gray-900 text-xl font-medium">
             No messages here yet!
           </Heading>
-          <p className="text-gray-800">
+          <p className="text-gray-800 text-center">
             A simple hello could lead to a million things. Start Messaging...
           </p>
         </div>

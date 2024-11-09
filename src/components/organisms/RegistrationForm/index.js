@@ -73,6 +73,7 @@ const RegistrationForm = () => {
         ...prevErrors,
         signUp: error.response.data.message || messages.errors.signUpFailed,
       }));
+      toast.error("Registration Failed!");
     } finally {
       setInProgress({ loading: false, progressText: "Sign Up" });
     }
