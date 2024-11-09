@@ -5,14 +5,14 @@ import ContactItemName from "../ContactItemName";
 import LastMessage from "../LastMessage";
 import { getChatDetails, getTimeStamp } from "../../../utils/chatUtils";
 
-const ContactItem = ({ isActive, onSelectItem, userDetails }) => {
+const ContactItem = ({ isActive, onSelectItem, chatDetails }) => {
   const { user } = JSON.parse(localStorage.getItem("userInfo"));
-  const [chatName, chatImage] = getChatDetails(user._id, userDetails);
+  const [chatName, chatImage] = getChatDetails(user._id, chatDetails);
   let timeStamp;
-  if (userDetails.lastMessage) {
-    timeStamp = getTimeStamp(userDetails.lastMessage.updatedAt);
+  if (chatDetails.lastMessage) {
+    timeStamp = getTimeStamp(chatDetails.lastMessage.updatedAt);
   } else {
-    timeStamp = getTimeStamp(userDetails.createdAt);
+    timeStamp = getTimeStamp(chatDetails.createdAt);
   }
   return (
     <li
@@ -21,15 +21,15 @@ const ContactItem = ({ isActive, onSelectItem, userDetails }) => {
         isActive && "bg-gradient-to-r from-customBlue to-customGreen"
       }`}
     >
-      {userDetails.isGroupChat ? (
-        <ContactGroupImage userDetails={userDetails} />
+      {chatDetails.isGroupChat ? (
+        <ContactGroupImage chatDetails={chatDetails} />
       ) : (
         <ContactImage userImage={chatImage} />
       )}
-      <div className="ml-2 flex flex-col justify-center md:w-[69%] w-[89%]">
+      <div className="flex flex-col justify-center md:w-[69%] w-[89%]">
         <ContactItemName userName={chatName} timeStamp={timeStamp} />
-        {userDetails.lastMessage && (
-          <LastMessage lastmessage={userDetails.lastMessage.content} />
+        {chatDetails.lastMessage && (
+          <LastMessage lastmessage={chatDetails.lastMessage.content} />
         )}
       </div>
     </li>

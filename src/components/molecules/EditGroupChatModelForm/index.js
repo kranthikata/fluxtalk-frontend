@@ -12,7 +12,7 @@ import { searchUsers } from "../../../api/userSearchAPI";
 import { TailSpin } from "react-loader-spinner";
 
 const EditGroupChatModelForm = () => {
-  const { activeItem, handleContactUpdate, setActiveItem } =
+  const { activeItem, handleContactUpdate, updateActiveItem } =
     useContext(ContactsContext);
   const {
     error,
@@ -91,7 +91,7 @@ const EditGroupChatModelForm = () => {
       setError("");
       setIsUpdateLoading(true);
       const { data } = await addUserToGroup(activeItem._id, selectedUser._id);
-      setActiveItem(data.addedMember);
+      updateActiveItem(data.addedMember);
       setShowUpdateModel(false);
       await handleContactUpdate();
     } catch (error) {
@@ -121,7 +121,7 @@ const EditGroupChatModelForm = () => {
       setIsUpdateLoading(true);
       const { data } = await renameGroup(activeItem._id, formData.groupName);
       setShowUpdateModel(false);
-      setActiveItem(data.updatedChatName);
+      updateActiveItem(data.updatedChatName);
       await handleContactUpdate();
     } catch (error) {
       setError(error?.response?.data?.message || error.message);

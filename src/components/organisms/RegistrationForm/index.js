@@ -10,9 +10,10 @@ import { signUpUser } from "../../../api/authApi";
 import validateRegistrationForm from "../../../utils/validateRegistrationForm";
 import { messages } from "../../../utils/messages";
 import NavigationContext from "../../../context/NavigationContext";
+import { toast } from "react-toastify";
 
 const RegistrationForm = () => {
-  const { navigateTo } = useContext(NavigationContext);
+  const { navigateReplace } = useContext(NavigationContext);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -29,7 +30,7 @@ const RegistrationForm = () => {
 
   //Redirecting to login page
   const hangleLoginRedirect = () => {
-    navigateTo("/login");
+    navigateReplace("/login");
   };
   //Handling The Input Changes
   const handleChange = (event) => {
@@ -53,13 +54,14 @@ const RegistrationForm = () => {
     try {
       setErrors({});
       setInProgress({ loading: true, progressText: "Signing Up..." });
-      const response = await signUpUser({
+      await signUpUser({
         name: formData.name,
         email: formData.email,
         password: formData.password,
         image: imageUrl,
       });
-      console.log(response);
+      toast.success("Registration Successful!");
+      navigateReplace("/login");
       setFormData({
         name: "",
         email: "",
@@ -67,7 +69,6 @@ const RegistrationForm = () => {
         confirmPassword: "",
       });
     } catch (error) {
-      console.log(error);
       setErrors((prevErrors) => ({
         ...prevErrors,
         signUp: error.response.data.message || messages.errors.signUpFailed,

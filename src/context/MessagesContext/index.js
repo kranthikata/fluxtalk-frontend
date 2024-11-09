@@ -14,43 +14,72 @@ export const MessagesProvider = ({ children }) => {
   const [messagesLoadingStatus, setMessagesLoadingStatus] = useState("INITIAL");
 
   useEffect(() => {
-    if (chatId) {
-      //Join the chat room when chatId changes
-      socket.emit("join", chatId);
+    if (!chatId) return;
 
-      //Fetch initial messages
-      const fetchMessages = async () => {
-        try {
-          setMessagesLoadingStatus("LOADING");
-          const { data } = await getMessages(chatId);
-          setMessages((prevMessages) => ({
-            ...prevMessages,
-            [chatId]: data,
-          }));
-          setMessagesLoadingStatus("DONE");
-        } catch (error) {
-          toast.error(error.message);
-        }
-      };
+    //Join the chat room when chatId changes
+    socket.emit("join", chatId);
 
-      fetchMessages();
+    //Fetch initial messages
+    const fetchMessages = async () => {
+      try {
+        setMessagesLoadingStatus("LOADING");
+        const { data } = await getMessages(chatId);
+        setMessages((prevMessages) => ({
+          ...prevMessages,
+          [chatId]: data,
+        }));
+        setMessagesLoadingStatus("DONE");
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
 
-      //Listen for new messages
-      socket.on("chat message", (msg) => {
-        if (msg.room === chatId) {
-          setMessages((prevMessages) => ({
-            ...prevMessages,
-            [chatId]: [...(prevMessages[chatId] || []), msg],
-          }));
-        }
-      });
+    fetchMessages();
 
-      //Clean up the socket listener
-      return () => {
-        socket.off("chat message");
-        setMessagesLoadingStatus("INITIAL");
-      };
-    }
+    //Clean up the socket listener
+    return () => {
+      socket.off("chat message");
+      setMessagesLoadingStatus("INITIAL");
+    };
+  }, [chatId]);
+
+  //Listen for new messages
+  useEffect(() => {
+    const handleIncomingMessage = (msg) => {
+      if (msg.room === chatId) {
+        setMessages((prevMessages) => ({
+          ...prevMessages,
+          [chatId]: [...(prevMessages[chatId] || []), msg],
+        }));
+      }
+    };
+
+    socket.on("chat message", handleIncomingMessage);
+
+    // Clean up the message listener on unmount
+    return () => {
+      socket.off("chat message", handleIncomingMessage);
+    };
+  }, [chatId]);
+
+  useEffect(() => {
+    const handleError = () => {
+      toast.error("Connection error, trying to reconnect...");
+    };
+
+    const handleReconnect = () => {
+      if (chatId) {
+        socket.emit("join", chatId); // Rejoin room on reconnect
+      }
+    };
+
+    socket.on("connect_error", handleError);
+    socket.on("reconnect", handleReconnect);
+
+    return () => {
+      socket.off("connect_error", handleError);
+      socket.off("reconnect", handleReconnect);
+    };
   }, [chatId]);
 
   const handleSendMessage = async (newMessage, activeItemId) => {
@@ -58,6 +87,7 @@ export const MessagesProvider = ({ children }) => {
       try {
         setNewMessage("");
         const { data } = await sendMessage(newMessage, activeItemId);
+        console.log(data);
         socket.emit("chat message", { ...data, room: activeItemId });
       } catch (error) {
         toast.error(error.message);

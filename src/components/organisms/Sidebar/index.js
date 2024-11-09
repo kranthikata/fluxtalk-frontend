@@ -24,7 +24,7 @@ const navItems = [
   },
 ];
 const Sidebar = () => {
-  const { setActiveItem, handleContactUpdate } = useContext(ContactsContext);
+  const { updateActiveItem, handleContactUpdate } = useContext(ContactsContext);
   const {
     expanded,
     navigateTo,
@@ -105,7 +105,7 @@ const Sidebar = () => {
       setLoading(true);
       const { data } = await createChat(userId);
       await handleContactUpdate();
-      setActiveItem(data.chat);
+      updateActiveItem(data.chat);
       toggleSidebar();
       setSearchInputValue("");
       setSearchResults((prevState) => ({ ...prevState, usersList: [] }));

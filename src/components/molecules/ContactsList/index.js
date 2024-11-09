@@ -7,7 +7,7 @@ const ContactsList = ({ contacts, activeItem, toggleActiveItem }) => {
       {contacts.map((eachChat) => (
         <ContactItem
           key={eachChat._id}
-          userDetails={eachChat}
+          chatDetails={eachChat}
           isActive={activeItem?._id === eachChat._id}
           onSelectItem={() => toggleActiveItem(eachChat)}
         />

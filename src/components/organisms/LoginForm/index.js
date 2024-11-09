@@ -8,9 +8,10 @@ import { loginUser } from "../../../api/authApi";
 import validateLoginForm from "../../../utils/validateLoginForm";
 import { messages } from "../../../utils/messages";
 import NavigationContext from "../../../context/NavigationContext";
+import { toast } from "react-toastify";
 
 const LoginForm = () => {
-  const { navigateTo } = useContext(NavigationContext);
+  const { navigateReplace } = useContext(NavigationContext);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -24,7 +25,7 @@ const LoginForm = () => {
 
   //Redirecting to the registration page
   const handleRegistrationRedirect = () => {
-    navigateTo("/registration");
+    navigateReplace("/registration");
   };
 
   //Handling Input Change
@@ -59,6 +60,8 @@ const LoginForm = () => {
         password: "",
       });
       localStorage.setItem("userInfo", JSON.stringify(response.data));
+      toast.success("Login Success!");
+      navigateReplace("/chat");
     } catch (error) {
       console.log(error);
       setErrors((prevErrors) => ({

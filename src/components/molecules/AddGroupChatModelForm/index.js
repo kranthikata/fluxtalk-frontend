@@ -23,7 +23,7 @@ const AddGroupChatModelForm = () => {
   const [userTags, setUserTags] = useState([]);
   const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
-  const { handleContactUpdate, setActiveItem } = useContext(ContactsContext);
+  const { handleContactUpdate, updateActiveItem } = useContext(ContactsContext);
   const { setShowCreateModel } = useContext(ModelContext);
   let userIds = useRef([]);
 
@@ -45,7 +45,7 @@ const AddGroupChatModelForm = () => {
         userIds.current
       );
       await handleContactUpdate();
-      setActiveItem(data.groupChat);
+      updateActiveItem(data.groupChat);
       setShowCreateModel(false);
     } catch (error) {
       setError(

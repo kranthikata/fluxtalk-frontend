@@ -9,7 +9,7 @@ const AuthButton = ({ type, className, isLoading, buttonText }) => {
     <Button type={type} className={className}>
       {isLoading ? (
         <>
-          <Icon icon={TailSpin} height={14} color="black" />
+          <Icon icon={TailSpin} height={14} width={14} color="black" />
           <Paragraph className="ml-1">{buttonText}</Paragraph>
         </>
       ) : (

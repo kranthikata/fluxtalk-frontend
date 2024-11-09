@@ -1,4 +1,4 @@
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import LandingPage from "./components/pages/LandingPage";
 import RegistrationPage from "./components/pages/RegistrationPage";
 import LoginPage from "./components/pages/LoginPage";
@@ -16,6 +16,7 @@ function App() {
         <Route exact path="/login" component={LoginPage} />
         <Route exact path="/chat" component={ChatPage} />
         <Route exact path="/not-found" component={PageNotFound} />
+        <Redirect to="/not-found" />
       </Switch>
       <ToastContainer position="bottom-center" />
     </BrowserRouter>

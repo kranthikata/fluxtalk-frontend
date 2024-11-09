@@ -4,7 +4,6 @@ import { getContacts } from "../../api/contactsAPI";
 import { deleteChat } from "../../api/chatAPI";
 import MessagesContext from "../MessagesContext";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const ContactsContext = createContext();
 
@@ -21,7 +20,7 @@ export const ContactsProvider = ({ children }) => {
       const response = await getContacts();
       setContacts(response.data);
     } catch (error) {
-      console.log(error);
+      toast.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -32,13 +31,16 @@ export const ContactsProvider = ({ children }) => {
   };
 
   const updateActiveItem = (item) => {
-    setMessages([]);
     setActiveItem(item);
-    setChatId(item._id);
+    if (item) {
+      setChatId(item._id);
+      setMessages([item._id]);
+    }
   };
 
-  const deselectActiveItem = () => {
+  const deselectActiveItem = async () => {
     setActiveItem(null);
+    await handleContactUpdate();
   };
 
   const handleDeleteChat = async (chatId) => {
@@ -46,8 +48,13 @@ export const ContactsProvider = ({ children }) => {
       setIsDeleteLoading(true);
       await deleteChat(chatId);
       setActiveItem(null);
+      setMessages((prevState) => {
+        const updatedMessages = { ...prevState };
+        delete updatedMessages[chatId];
+        return updatedMessages;
+      });
       await handleContactUpdate();
-      toast.success("Deleted Successfully");
+      toast.success("Chat Deleted Successfully");
     } catch (error) {
       toast.error(error.message);
     } finally {

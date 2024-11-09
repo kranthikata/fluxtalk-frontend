@@ -20,7 +20,7 @@ export const getTimeStamp = (timeStamp) => {
   const now = new Date();
 
   //Helper function to get the difference in days
-  const daysDifference = Math.floor(((now - date) / 1000) * 60 * 60 * 24);
+  const daysDifference = Math.floor((now - date) / (1000 * 60 * 60 * 24));
 
   //Check if the message was sent today
   if (daysDifference === 0) {

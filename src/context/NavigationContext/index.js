@@ -8,8 +8,11 @@ export const NavigationProvider = ({ children }) => {
   const navigateTo = (path) => {
     history.push(path);
   };
+  const navigateReplace = (path) => {
+    history.replace(path);
+  };
   return (
-    <NavigationContext.Provider value={{ navigateTo }}>
+    <NavigationContext.Provider value={{ navigateTo, navigateReplace }}>
       {children}
     </NavigationContext.Provider>
   );

@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import ContactsContext from "../ContactsContext";
 import { deleteChat, removeUserFromGroup } from "../../api/chatAPI";
+import { toast } from "react-toastify";
 
 const ModelContext = createContext();
 
@@ -10,7 +11,7 @@ export const ModelProvider = ({ children }) => {
   const [error, setError] = useState("");
   const [isUpdateLoading, setIsUpdateLoading] = useState(false);
   const [currentUsers, setCurrentUsers] = useState([]);
-  const { activeItem, setActiveItem, handleContactUpdate } =
+  const { activeItem, updateActiveItem, handleContactUpdate } =
     useContext(ContactsContext);
 
   useEffect(() => {
@@ -37,21 +38,20 @@ export const ModelProvider = ({ children }) => {
         activeItem._id,
         selectedUser._id
       );
-      console.log(selectedUser._id === user._id);
-      console.log(data.removedMember);
       if (
         selectedUser._id === user._id ||
         data.removedMember.users.length === 1
       ) {
-        setActiveItem(null);
-        setShowUpdateModel(false);
         await deleteChat(activeItem._id);
+        setShowUpdateModel(false);
+        updateActiveItem(null);
         await handleContactUpdate();
+        toast.success("Group deleted successfully!");
       } else {
-        setActiveItem(data.removedMember);
+        updateActiveItem(data.removedMember);
       }
     } catch (error) {
-      console.log(error);
+      toast.error("Error occured");
     }
   };
 
@@ -60,7 +60,7 @@ export const ModelProvider = ({ children }) => {
       setIsUpdateLoading(true);
       await handleRemoveUser(currUser);
     } catch (error) {
-      console.log(error);
+      toast.error(error);
     } finally {
       setIsUpdateLoading(false);
     }

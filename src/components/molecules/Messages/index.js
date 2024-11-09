@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import Image from "../../atoms/Image";
 import { isSameSender, isLastMessage } from "../../../utils/chatUtils";
+import Heading from "../../atoms/Heading";
 
 const Messages = ({ messages }) => {
   const { user } = JSON.parse(localStorage.getItem("userInfo"));
@@ -50,6 +51,9 @@ const Messages = ({ messages }) => {
             alt="No Chat Here"
             className="mb-2 h-72"
           />
+          <Heading level={1} className="text-gray-900 text-xl font-medium">
+            No messages here yet!
+          </Heading>
           <p className="text-gray-800">
             A simple hello could lead to a million things. Start Messaging...
           </p>
