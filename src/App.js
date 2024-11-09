@@ -6,6 +6,7 @@ import ChatPage from "./components/pages/ChatPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PageNotFound from "./components/molecules/PageNotFound";
+import ProtectedRoute from "./components/organisms/ProtectedRoute";
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
         <Route exact path="/" component={LandingPage} />
         <Route exact path="/registration" component={RegistrationPage} />
         <Route exact path="/login" component={LoginPage} />
-        <Route exact path="/chat" component={ChatPage} />
+        <ProtectedRoute exact path="/chat" component={ChatPage} />
         <Route exact path="/not-found" component={PageNotFound} />
         <Redirect to="/not-found" />
       </Switch>
