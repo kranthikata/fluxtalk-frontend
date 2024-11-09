@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const { accessToken } = JSON.parse(localStorage.getItem("userInfo"));
 export const createChat = (userId) => {
+  const { accessToken } = JSON.parse(localStorage.getItem("userInfo"));
   return axios.post(
     "https://fluxtalk-backend.onrender.com/api/v1/chats/",
     {
@@ -17,6 +17,7 @@ export const createChat = (userId) => {
 };
 
 export const deleteChat = (chatId) => {
+  const { accessToken } = JSON.parse(localStorage.getItem("userInfo"));
   return axios.delete(
     `https://fluxtalk-backend.onrender.com/api/v1/chats/${chatId}`,
     { headers: { Authorization: `Bearer ${accessToken}` } }
@@ -24,6 +25,7 @@ export const deleteChat = (chatId) => {
 };
 
 export const createGroupChat = (groupName, userIds) => {
+  const { accessToken } = JSON.parse(localStorage.getItem("userInfo"));
   return axios.post(
     "https://fluxtalk-backend.onrender.com/api/v1/chats/group/",
     { name: groupName, users: JSON.stringify(userIds) },
@@ -37,6 +39,7 @@ export const createGroupChat = (groupName, userIds) => {
 };
 
 export const addUserToGroup = (chatId, userId) => {
+  const { accessToken } = JSON.parse(localStorage.getItem("userInfo"));
   return axios.put(
     "https://fluxtalk-backend.onrender.com/api/v1/chats/groupadd/",
     { chatId, userId },
@@ -50,6 +53,7 @@ export const addUserToGroup = (chatId, userId) => {
 };
 
 export const removeUserFromGroup = (chatId, userId) => {
+  const { accessToken } = JSON.parse(localStorage.getItem("userInfo"));
   return axios.put(
     "https://fluxtalk-backend.onrender.com/api/v1/chats/groupremove",
     { chatId, userId },
@@ -63,6 +67,7 @@ export const removeUserFromGroup = (chatId, userId) => {
 };
 
 export const renameGroup = (chatId, chatName) => {
+  const { accessToken } = JSON.parse(localStorage.getItem("userInfo"));
   return axios.put(
     "https://fluxtalk-backend.onrender.com/api/v1/chats/rename",
     { chatId, chatName },

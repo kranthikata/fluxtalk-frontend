@@ -8,59 +8,71 @@ const socket = io("https://fluxtalk-backend.onrender.com");
 const MessagesContext = createContext();
 
 export const MessagesProvider = ({ children }) => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState({});
   const [chatId, setChatId] = useState(null);
   const [newMessage, setNewMessage] = useState("");
+  const [messagesLoadingStatus, setMessagesLoadingStatus] = useState("INITIAL");
 
   useEffect(() => {
     if (chatId) {
       //Join the chat room when chatId changes
       socket.emit("join", chatId);
 
-      //Listen for new messages
-      socket.on("chat message", (msg) => {
-        setMessages((prevMessages) => [...prevMessages, msg]);
-      });
-
       //Fetch initial messages
       const fetchMessages = async () => {
         try {
+          setMessagesLoadingStatus("LOADING");
           const { data } = await getMessages(chatId);
-          setMessages(data);
+          setMessages((prevMessages) => ({
+            ...prevMessages,
+            [chatId]: data,
+          }));
+          setMessagesLoadingStatus("DONE");
         } catch (error) {
-          console.log(error);
+          toast.error(error.message);
         }
       };
 
       fetchMessages();
 
+      //Listen for new messages
+      socket.on("chat message", (msg) => {
+        if (msg.room === chatId) {
+          setMessages((prevMessages) => ({
+            ...prevMessages,
+            [chatId]: [...(prevMessages[chatId] || []), msg],
+          }));
+        }
+      });
+
       //Clean up the socket listener
       return () => {
         socket.off("chat message");
+        setMessagesLoadingStatus("INITIAL");
       };
     }
   }, [chatId]);
 
-  const handleSendMessage = async (newMessage, activeItem) => {
+  const handleSendMessage = async (newMessage, activeItemId) => {
     if (newMessage) {
       try {
         setNewMessage("");
-        const { data } = await sendMessage(newMessage, activeItem);
-        socket.emit("chat message", { ...data, room: activeItem });
-        toast.success("success", {
-          position: "bottom-center",
-        });
+        const { data } = await sendMessage(newMessage, activeItemId);
+        socket.emit("chat message", { ...data, room: activeItemId });
       } catch (error) {
-        console.log(error);
+        toast.error(error.message);
       }
     }
   };
 
+  const activeChatMessages = messages[chatId] || [];
+
   return (
     <MessagesContext.Provider
       value={{
-        messages,
+        activeChatMessages,
         newMessage,
+        messagesLoadingStatus,
         setNewMessage,
         setChatId,
         handleSendMessage,

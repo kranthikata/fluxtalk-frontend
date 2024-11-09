@@ -47,15 +47,9 @@ export const ContactsProvider = ({ children }) => {
       await deleteChat(chatId);
       setActiveItem(null);
       await handleContactUpdate();
-      setTimeout(() => {
-        toast.success("Deleted Successfully", {
-          position: "bottom-center",
-        });
-      }, 200);
+      toast.success("Deleted Successfully");
     } catch (error) {
-      toast.error(error.message, {
-        position: "bottom-center",
-      });
+      toast.error(error.message);
     } finally {
       setIsDeleteLoading(false);
     }
