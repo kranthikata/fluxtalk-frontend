@@ -24,6 +24,7 @@ const useImageUpload = () => {
       data.append("file", files[0]);
       data.append("upload_preset", "FluxTalk");
       data.append("cloud_name", "duqopzabn");
+      data.append("secure", true);
 
       //Clearing error if exists
       setImageError("");
@@ -35,7 +36,7 @@ const useImageUpload = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          setImageUrl(data.url);
+          setImageUrl(data.secure_url);
           setUploadStatus("success");
           toast.success("Image upload successful!");
         })
