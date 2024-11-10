@@ -10,6 +10,7 @@ import { IoIosClose } from "react-icons/io";
 import ContactsContext from "../../../context/ContactsContext";
 import { TailSpin } from "react-loader-spinner";
 import ModelContext from "../../../context/ModelContext";
+import { toast } from "react-toastify";
 
 const AddGroupChatModelForm = () => {
   const [formData, setFormData] = useState({
@@ -37,6 +38,10 @@ const AddGroupChatModelForm = () => {
   const onHandleSubmit = async (event) => {
     event.preventDefault();
     //create group chat
+    if (formData.groupName.trim() === "") {
+      toast.error("Enter valid group name");
+      return;
+    }
     try {
       setError("");
       setLoading(true);
@@ -47,12 +52,14 @@ const AddGroupChatModelForm = () => {
       await handleContactUpdate();
       updateActiveItem(data.groupChat);
       setShowCreateModel(false);
+      toast.success("Group Created Successfully!");
     } catch (error) {
       setError(
         error?.response?.data?.message ||
           error?.message ||
           "An unknown error occurred"
       );
+      toast.error("Group creation failed");
     } finally {
       setLoading(false);
     }
@@ -78,7 +85,7 @@ const AddGroupChatModelForm = () => {
 
   useEffect(() => {
     let delayDebounce;
-    if (formData.userName === "") {
+    if (formData.userName.trim() === "") {
       clearTimeout(delayDebounce);
       setSearchResults({ status: "", results: [] });
       return;
@@ -102,6 +109,10 @@ const AddGroupChatModelForm = () => {
 
   //Handle select user
   const handleSelectUser = (user) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      userName: "",
+    }));
     if (!userTags.includes(user.name)) {
       setUserTags([...userTags, user.name]);
       userIds.current.push(user);

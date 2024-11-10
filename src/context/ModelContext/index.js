@@ -45,10 +45,13 @@ export const ModelProvider = ({ children }) => {
         await deleteChat(activeItem._id);
         setShowUpdateModel(false);
         updateActiveItem(null);
-        await handleContactUpdate();
         toast.success("Group deleted successfully!");
+        await handleContactUpdate();
       } else {
         updateActiveItem(data.removedMember);
+        toast.success(
+          `${selectedUser.name} is no longer part of this conversation.`
+        );
       }
     } catch (error) {
       toast.error("Error occured");

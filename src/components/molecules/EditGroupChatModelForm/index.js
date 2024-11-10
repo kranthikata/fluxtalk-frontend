@@ -10,6 +10,7 @@ import ModelContext from "../../../context/ModelContext";
 import { addUserToGroup, renameGroup } from "../../../api/chatAPI";
 import { searchUsers } from "../../../api/userSearchAPI";
 import { TailSpin } from "react-loader-spinner";
+import { toast } from "react-toastify";
 
 const EditGroupChatModelForm = () => {
   const { activeItem, handleContactUpdate, updateActiveItem } =
@@ -93,9 +94,11 @@ const EditGroupChatModelForm = () => {
       const { data } = await addUserToGroup(activeItem._id, selectedUser._id);
       updateActiveItem(data.addedMember);
       setShowUpdateModel(false);
+      toast.success(`Welcome! ${selectedUser.name} has joined the group.`);
       await handleContactUpdate();
     } catch (error) {
       setError(error?.response?.data?.message || error.message);
+      toast.error("Unexpected error occured!");
     } finally {
       setIsUpdateLoading(false);
     }
@@ -110,8 +113,9 @@ const EditGroupChatModelForm = () => {
   //Handle rename
   const handleRename = async () => {
     //Check group name is empty
-    if (!formData.groupName) {
+    if (!formData.groupName.trim()) {
       setError("Enter Group name to update");
+      toast.info("Enter group name");
       return;
     }
 
@@ -122,9 +126,11 @@ const EditGroupChatModelForm = () => {
       const { data } = await renameGroup(activeItem._id, formData.groupName);
       setShowUpdateModel(false);
       updateActiveItem(data.updatedChatName);
+      toast.success("Chat Name Updated Successfully!");
       await handleContactUpdate();
     } catch (error) {
       setError(error?.response?.data?.message || error.message);
+      toast.error("Error occured while updating.");
     } finally {
       setIsUpdateLoading(false);
     }

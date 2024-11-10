@@ -54,7 +54,6 @@ const LoginForm = () => {
         email: formData.email,
         password: formData.password,
       });
-      console.log(response);
       setFormData({
         email: "",
         password: "",

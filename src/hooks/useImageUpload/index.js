@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { messages } from "../../utils/messages";
+import { toast } from "react-toastify";
 
 const useImageUpload = () => {
   const [imageUrl, setImageUrl] = useState();
@@ -24,8 +25,6 @@ const useImageUpload = () => {
       data.append("upload_preset", "FluxTalk");
       data.append("cloud_name", "duqopzabn");
 
-      console.log(data);
-
       //Clearing error if exists
       setImageError("");
       setUploadStatus("uploading");
@@ -38,14 +37,15 @@ const useImageUpload = () => {
         .then((data) => {
           setImageUrl(data.url);
           setUploadStatus("success");
+          toast.success("Image upload successful!");
         })
         .catch((error) => {
-          console.log("Error uploading image:", error);
+          toast.error("Error occured while uploading image");
           setImageError(messages.errors.imageUploadError);
           setUploadStatus("error");
         });
     } else {
-      console.log(messages.errors.unsupportedFileType);
+      toast.error("Unsupported file format");
       setImageError(messages.errors.unsupportedFileType);
       setUploadStatus("error");
     }

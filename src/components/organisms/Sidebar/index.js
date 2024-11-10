@@ -14,6 +14,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import { TailSpin } from "react-loader-spinner";
 import Button from "../../atoms/Button";
 import Image from "../../atoms/Image";
+import { toast } from "react-toastify";
 
 const navItems = [
   {
@@ -120,6 +121,7 @@ const Sidebar = () => {
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
     navigateTo("/");
+    toast.success("Logout successful!");
   };
 
   //Opening the search bar

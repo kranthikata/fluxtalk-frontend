@@ -19,20 +19,29 @@ export const getTimeStamp = (timeStamp) => {
   const date = new Date(timeStamp);
   const now = new Date();
 
-  //Helper function to get the difference in days
-  const daysDifference = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+  // Helper function to check if the date is "yesterday"
+  const isYesterday = () => {
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    return (
+      date.getDate() === yesterday.getDate() &&
+      date.getMonth() === yesterday.getMonth() &&
+      date.getFullYear() === yesterday.getFullYear()
+    );
+  };
 
-  //Check if the message was sent today
-  if (daysDifference === 0) {
+  // Check if the message was sent today
+  if (date.toDateString() === now.toDateString()) {
     return date.toLocaleString("en-IN", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
     });
-  } else if (daysDifference === 1) {
-    //If yesterday
+  } else if (isYesterday()) {
+    // If it was sent yesterday
     return "Yesterday";
   } else {
+    // Otherwise, show the date in DD/MM/YYYY format
     const options = {
       year: "numeric",
       month: "2-digit",

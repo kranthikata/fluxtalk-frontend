@@ -1,7 +1,12 @@
+import { Redirect } from "react-router-dom";
 import LoginForm from "../../organisms/LoginForm";
 import AuthTemplate from "../../templates/AuthTemplate";
 
 const LoginPage = () => {
+  const isUserLoggedIn = JSON.parse(localStorage.getItem("userInfo"));
+  if (isUserLoggedIn) {
+    return <Redirect to="/chat" />;
+  }
   return (
     <AuthTemplate
       title="Login"

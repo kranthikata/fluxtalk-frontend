@@ -7,8 +7,13 @@ import { SidebarProvider } from "../../../context/SidebarContext";
 import { ContactsProvider } from "../../../context/ContactsContext";
 import { ModelProvider } from "../../../context/ModelContext";
 import { MessagesProvider } from "../../../context/MessagesContext";
+import { Redirect } from "react-router-dom";
 
 const ChatPage = () => {
+  const isUserLoggedIn = JSON.parse(localStorage.getItem("userInfo"));
+  if (!isUserLoggedIn) {
+    return <Redirect to="/" />;
+  }
   return (
     <SidebarProvider>
       <MessagesProvider>

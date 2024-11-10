@@ -27,7 +27,7 @@ const ChatHeader = () => {
               <Icon icon={IoArrowBackOutline} size={20} className="md:hidden" />
             </Button>
             {activeItem.isGroupChat ? (
-              <ContactGroupImage userDetails={activeItem} />
+              <ContactGroupImage chatDetails={activeItem} />
             ) : (
               <ContactImage userImage={chatImage} />
             )}

@@ -12,7 +12,7 @@ const ContactItem = ({ isActive, onSelectItem, chatDetails }) => {
   if (chatDetails.lastMessage) {
     timeStamp = getTimeStamp(chatDetails.lastMessage.updatedAt);
   } else {
-    timeStamp = getTimeStamp(chatDetails.createdAt);
+    timeStamp = getTimeStamp(chatDetails.updatedAt);
   }
   return (
     <li

@@ -3,8 +3,13 @@ import Heading from "../../atoms/Heading";
 import Paragraph from "../../atoms/Paragraph";
 import Button from "../../atoms/Button";
 import Image from "../../atoms/Image";
+import { Redirect } from "react-router-dom";
 
 const LandingPage = (props) => {
+  const isUserLoggedIn = JSON.parse(localStorage.getItem("userInfo"));
+  if (isUserLoggedIn) {
+    return <Redirect to="/chat" />;
+  }
   const { history } = props;
   const handleSignUp = () => {
     history.push("/registration");

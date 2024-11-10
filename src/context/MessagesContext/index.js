@@ -22,6 +22,7 @@ export const MessagesProvider = ({ children }) => {
     //Fetch initial messages
     const fetchMessages = async () => {
       try {
+        toast.info("Loading Messages");
         setMessagesLoadingStatus("LOADING");
         const { data } = await getMessages(chatId);
         setMessages((prevMessages) => ({
@@ -87,7 +88,6 @@ export const MessagesProvider = ({ children }) => {
       try {
         setNewMessage("");
         const { data } = await sendMessage(newMessage, activeItemId);
-        console.log(data);
         socket.emit("chat message", { ...data, room: activeItemId });
       } catch (error) {
         toast.error(error.message);

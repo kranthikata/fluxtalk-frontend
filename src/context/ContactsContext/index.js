@@ -56,7 +56,7 @@ export const ContactsProvider = ({ children }) => {
       await handleContactUpdate();
       toast.success("Chat Deleted Successfully");
     } catch (error) {
-      toast.error(error.message);
+      toast.error("Chat Deletion failed!");
     } finally {
       setIsDeleteLoading(false);
     }
